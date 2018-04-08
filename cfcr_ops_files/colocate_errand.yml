@@ -1,0 +1,19 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: apply-specs
+    properties:
+      admin-password: ((kubo-admin-password))
+      admin-username: admin
+      api-token: ((kubelet-password))
+      authorization-mode: rbac
+      tls:
+        heapster: ((tls-heapster))
+        influxdb: ((tls-influxdb))
+        kubernetes: ((tls-kubernetes))
+        kubernetes-dashboard: ((tls-kubernetes-dashboard))
+    release: kubo
+- type: remove
+  path: /instance_groups/0
+  value: null
+
