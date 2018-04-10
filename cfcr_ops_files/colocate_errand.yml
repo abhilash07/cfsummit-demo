@@ -13,6 +13,8 @@
         kubernetes: ((tls-kubernetes))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
     release: kubo
+    consumes:
+      cloud-provider: {from: master-cloud-provider}
 - type: remove
   path: /instance_groups/0
   value: null

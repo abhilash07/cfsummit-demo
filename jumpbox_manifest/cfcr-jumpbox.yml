@@ -1,0 +1,61 @@
+name: cfcr-jumpbox
+features:
+  use_dns_addresses: true
+
+releases:
+- name: kubo
+  version: latest
+- name: cfcr-jumpbox
+  version: latest
+- name: bosh-dns
+  version: latest
+- name: squid
+  version: latest
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: "3541.10"
+
+instance_groups:
+- name: jumpbox
+  instances: 1
+  networks:
+  - name: default
+  azs: [z1,z2,z3]
+  jobs:
+    - name: bosh-dns
+      release: bosh-dns
+      properties:
+        cache:
+          enabled: true
+        health:
+          enabled: true
+          server:
+            tls: ((/dns_healthcheck_server_tls))
+          client:
+            tls: ((/dns_healthcheck_client_tls))
+    - name: kubo-dns-aliases
+      release: kubo
+      consumes:
+        kube-apiserver: {from: master, deployment: cfcr-staging}
+        etcd: {from: etcd, deployment: cfcr-staging}
+
+    - name: kubectl
+      release: cfcr-jumpbox
+      consumes:
+        kube-apiserver: {from: master, deployment: cfcr-staging}
+    - name: squid
+      release: squid
+      properties:
+        acl: |
+          http_access allow all
+  stemcell: trusty
+  vm_type: small
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 10000-300000
+  update_watch_time: 10000-300000
+
