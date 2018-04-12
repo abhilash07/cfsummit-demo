@@ -1,7 +1,9 @@
 #doitlive shell: /bin/bash
 #doitlive prompt: default
 #doitlive speed: 10
+#doitlive commentecho: true
 
+#Login to credhub
 client_secret="$(bosh int $HOME/vars.yml --path /credhub_admin_client_secret)"
 #doitlive env: client_secret="$(bosh int $HOME/vars.yml --path /credhub_admin_client_secret)"
 
@@ -11,13 +13,16 @@ credhub find -a
 
 credhub find -n /cfsummit-bosh/cfcr-staging/
 
+#Get token to authenticate.
 token="$(credhub get -n /cfsummit-bosh/cfcr-staging/kubo-admin-password | bosh int - --path /value)"
 #doitlive env: token="$(credhub get -n /cfsummit-bosh/cfcr-staging/kubo-admin-password | bosh int - --path /value)"
 
 credhub get -n /cfsummit-bosh/cfcr-staging/tls-kubernetes | bosh int - --path /value/ca | tee staging_ca.pem
 
+#Get nodes from the cluster
 kubectl --certificate-authority=staging_ca.pem --token="$token" --server=https://master.cfcr.internal:8443 get nodes
 
+#Need jumpbox to access it
 jumpbox_ip="$(bosh -d cfcr-jumpbox vms --column ips | xargs)"
 #doitlive env: jumpbox_ip="$(bosh -d cfcr-jumpbox vms --column ips | xargs)"
 
