@@ -20,5 +20,5 @@ bosh -d cfcr -n deploy "$HOME/kubo-deployment/manifests/cfcr.yml" \
 bosh -d cfcr -n run-errand apply-specs --instance master/0
 
 cat cfcr_ops_files/colocate_errand.yml 
-cat cfcr_ops_files/add_mastests_to_lb.yml 
+cat cfcr_ops_files/add_masters_to_lb.yml
 cat cfcr_ops_files/add_lb_ip_to_certificate.yml
