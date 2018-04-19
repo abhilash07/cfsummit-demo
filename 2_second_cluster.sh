@@ -12,17 +12,14 @@ bosh -d cfcr-staging -n deploy "$HOME/kubo-deployment/manifests/cfcr.yml" \
     --ops-file cfcr_ops_files/expose_links.yml \
     --ops-file cfcr_ops_files/rename_deployment.yml \
     --var director_name=cfsummit-bosh \
+    --var deployment_name=cfcr-staging \
     --var project_id=cf-pcf-kubo \
-    --var network=cfsummit \
-    --var deployment_name=cfcr-staging
+    --var network=cfsummit
 
-#Run default workloads
 bosh -d cfcr-staging -n run-errand apply-specs --instance master/0
 
-cat cfcr_ops_files/expose_links.yml 
-cat cfcr_ops_files/rename_deployment.yml
+cat cfcr_ops_files/expose_links.yml
 
-#Deploy JumpBox
 bosh -n -d cfcr-jumpbox deploy jumpbox_manifest/cfcr-jumpbox.yml
 
 less jumpbox_manifest/cfcr-jumpbox.yml

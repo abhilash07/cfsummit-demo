@@ -10,11 +10,11 @@ bosh -d cfcr -n deploy "$HOME/kubo-deployment/manifests/cfcr.yml" \
     --ops-file "$HOME/kubo-deployment/manifests/ops-files/iaas/gcp/cloud-provider.yml" \
     --ops-file cfcr_ops_files/colocate_errand.yml \
     --ops-file cfcr_ops_files/add_lb_ip_to_certificate.yml \
-    --ops-file cfcr_ops_files/add_mastests_to_lb.yml \
+    --ops-file cfcr_ops_files/add_masters_to_lb.yml \
     --var director_name=cfsummit-bosh \
+    --var deployment_name=cfcr \
     --var project_id=cf-pcf-kubo \
-    --var network=cfsummit \
-    --var deployment_name=cfcr
+    --var network=cfsummit 
 
 #Deploy base workloads
 bosh -d cfcr -n run-errand apply-specs --instance master/0
